@@ -6,7 +6,7 @@ _pinOffsetZ = -2.96;
 _pinOffsetXY = (_pitch / 2) - (_pinWidth / 2);
 
 module pin() {
-    color("black")
+    color("#222")
         cube(_pitch+0.001); // extra 0.001 to ensure proper unions
     translate([_pinOffsetXY, _pinOffsetXY, _pinOffsetZ])
         color("gainsboro")
