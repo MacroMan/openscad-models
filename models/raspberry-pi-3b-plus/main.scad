@@ -1,9 +1,13 @@
 include <../../scripts/print-resolution.scad>
+use <../../scripts/transformations.scad>
 use <../../modules/pin-header.scad>
 use <ethernet.scad>
 use <usb.scad>
 use <headphone.scad>
 use <hdmi.scad>
+use <micro-usb.scad>
+use <expansion.scad>
+use <micro-sd-slot.scad>
 
 /* [Hidden] */
 _epsilon = 0.001;
@@ -59,4 +63,16 @@ union() {
     
     translate([24.5, -1.65, _boardHeight])
         HDMI();
+
+    translate([6.6, -1.5, _boardHeight])
+        microUSB();
+
+    translate([1, 18, _boardHeight])
+        expansionPort();
+    translate([45, 22, _boardHeight])
+        rotateZ(180)
+            expansionPort();
+
+    translate([1.8, 22, -1.5])
+        microSDSlot();
 }
