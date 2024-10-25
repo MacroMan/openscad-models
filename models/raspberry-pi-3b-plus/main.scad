@@ -2,6 +2,8 @@ include <../../scripts/print-resolution.scad>
 use <../../modules/pin-header.scad>
 use <ethernet.scad>
 use <usb.scad>
+use <headphone.scad>
+use <hdmi.scad>
 
 /* [Hidden] */
 _epsilon = 0.001;
@@ -30,36 +32,31 @@ module mountingHoles() {
             mountingHole();
 }
 
-module GPIO() {
-    translate([7.1, 50, _boardHeight])
-        pinHeader(2, 20);
-}
-
-module ethernet() {
-    translate([65.75, 2.5, _boardHeight])
-        ethernetPort();
-}
-
-module usb() {
-    translate([69.85, 22.25, _boardHeight])
-        usbPorts();
-    translate([69.85, 40.25, _boardHeight])
-        usbPorts();
-}
-
-module POE() {
-    translate([58.96, 43.837, _boardHeight])
-        pinHeader(2, 2);
-}
-
 union() {
     difference() {
         board();
         mountingHoles();
     }
 
-    GPIO();
-    ethernet();
-    usb();
-    POE();
+    translate([7.1, 50, _boardHeight])
+        pinHeader(2, 20); // GPIO pins
+    
+    translate([58.96, 43.837, _boardHeight])
+        pinHeader(2, 2); // POE pins
+    
+    translate([58.96, 38.74, _boardHeight])
+        pinHeader(1, 2); // PEN & RUN pins
+    
+    translate([65.75, 2.5, _boardHeight])
+        ethernetPort();
+    
+    for(y=[22.25, 40.25])
+        translate([69.85, y, _boardHeight])
+            usbPorts();
+    
+    translate([49.925, 0, _boardHeight])
+        headphone();
+    
+    translate([24.5, -1.65, _boardHeight])
+        HDMI();
 }
