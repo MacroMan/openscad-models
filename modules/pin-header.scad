@@ -1,4 +1,5 @@
 /* [Hidden] */
+_epsilon = 0.001;
 _pitch = 2.54;
 _pinWidth = 0.65;
 _pinHeight = 11.7;
@@ -7,7 +8,7 @@ _pinOffsetXY = (_pitch / 2) - (_pinWidth / 2);
 
 module pin() {
     color("#222")
-        cube(_pitch+0.001); // extra 0.001 to ensure proper unions
+        cube(_pitch+_epsilon);
     translate([_pinOffsetXY, _pinOffsetXY, _pinOffsetZ])
         color("gainsboro")
             cube([_pinWidth, _pinWidth, _pinHeight]);

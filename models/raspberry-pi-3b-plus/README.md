@@ -1,8 +1,8 @@
 # OpenSCAD model of Raspberry Pi 3 model B+
 
-![01](01.png)
-![02](02.png)
-![03](03.png)
+![01](images/01.png)
+![02](images/02.png)
+![03](images/03.png)
 
 - Useful for sanity checking case designs
 - Positions of components are accurate according to https://datasheets.raspberrypi.com/rpi3/raspberry-pi-3-b-plus-product-brief.pdf
