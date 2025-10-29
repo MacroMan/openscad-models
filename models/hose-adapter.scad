@@ -1,4 +1,4 @@
-include <../scripts/print-resolution.scad>
+include <../scripts/common.scad>
 use <MCAD/regular_shapes.scad>
 
 a_depth = 30;

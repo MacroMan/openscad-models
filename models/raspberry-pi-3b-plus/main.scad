@@ -1,4 +1,4 @@
-include <../../scripts/print-resolution.scad>
+include <../../scripts/common.scad>
 use <../../scripts/transformations.scad>
 use <../../modules/pin-header.scad>
 use <ethernet.scad>
@@ -10,7 +10,6 @@ use <expansion.scad>
 use <micro-sd-slot.scad>
 
 /* [Hidden] */
-_epsilon = 0.001;
 _boardHeight = 1.5;
 
 module board() {

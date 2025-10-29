@@ -1,4 +1,4 @@
-include <../scripts/print-resolution.scad>
+include <../scripts/common.scad>
 
 module prong_end() {
     rotate([-135, 0, 0])
