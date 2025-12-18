@@ -1,108 +1,114 @@
+include <../BOSL2/std.scad>
+include <../BOSL2/screws.scad>
 include <../scripts/common.scad>
-use <../scripts/transformations.scad>
 use <../modules/esp32-s2-feather.scad>
 use <../modules/mcp9808.scad>
-use <../modules/dome.scad>
 
 $fa = 12;
 $fs = 0.4;
+
+outer_diameter = 70;
+outer_depth = 18;
+shell_thickness = 1.5;
+cover_rounding = 10;
+cable_diameter = 3.5;
+cable_snag_slop = 0.8;
+
+vent_count = 8;
+vent_width = 1.5;
+vent_height = 4;
+vent_offset = 7;
+
+esp_y_pos = 4;
+mcp_y_pos = -20;
+standoff_height = 4.5;
+standoff_hole_diam = 1.8;
+seperator_pos = -10;
+
+internal_cable_holes_width = 2.0;
+internal_cable_holes_height = 6;
+internal_cable_holes_offset = 8.0;
+
+mounting_hole1_y_offset = 21;
+mounting_hole1_x_offset = 0;
+
+show_base = false;
+show_cover = false;
 show_boards = false;
 
-module standoff(majorD, minorD) {
-    cone_height = (majorD - minorD) / 2;
-
-    cylinder(d = majorD, h = 0.3);
-    cylinder(d = minorD, h = 3.5 + _epsilon);
-    translateZ(3.5)
-        cylinder(d1 = minorD, d2 = majorD, h = cone_height);
-    translateZ(3.5 + cone_height)
-        cylinder(d = majorD, h = 25);
+module standoff(diam, height) {
+  difference() {
+    cylinder(d=diam + 3, h=height);
+    down(_epsilon) cylinder(d=diam, h=height + (_epsilon * 2));
+  }
 }
 
-// Main enclosure
-difference() {
-    dome(80, 50, 1.5);
+module cable_snag() {
+  back(5) up(standoff_height / 2) xrot(90) cube([1.5, standoff_height, 3], center=true) attach(TOP, BOTTOM)
+            prismoid(size1=[1.5, standoff_height], size2=[0, standoff_height - 0.5], h=2, shift=[0, -0.5]);
+}
+
+module seperator() {
+  difference() {
+    cube([outer_diameter, shell_thickness, outer_depth]);
+    left(outer_diameter / 2 - internal_cable_holes_offset) down(_epsilon) cube([internal_cable_holes_width, shell_thickness + (_epsilon * 2), internal_cable_holes_height]);
+    right(outer_diameter / 2 - internal_cable_holes_offset) down(_epsilon) cube([internal_cable_holes_width, shell_thickness + (_epsilon * 2), internal_cable_holes_height]);
+  }
+}
+
+module mounting_hole() {
+  down(_epsilon) screw_hole("M2.5", head="flat", counterbore=0, length=shell_thickness + (_epsilon * 2), anchor=BOTTOM);
+}
+
+module difference_dome() {
+  difference() {
+    cube([outer_diameter * 2, outer_diameter * 2, outer_depth * 2], anchor=BOTTOM);
+    down(_epsilon) cyl(d=outer_diameter - (shell_thickness * 2), h=outer_depth - shell_thickness, rounding2=cover_rounding, anchor=BOTTOM);
+  }
+}
+
+module cover() {
+  difference() {
+    cyl(d=outer_diameter, h=outer_depth, rounding2=cover_rounding, anchor=BOTTOM);
+    down(_epsilon) cyl(d=outer_diameter - (shell_thickness * 2), h=outer_depth - shell_thickness, rounding2=cover_rounding, anchor=BOTTOM);
 
     // Power cable cutout
-    translate([0, -40, 1.75]) {
-        rotateX(-90)
-        cylinder(h = 4, d = 3.5);
+    translate([0, -outer_diameter / 2, cable_diameter / 2 + shell_thickness]) {
+      xrot(-90)
+        cylinder(h=shell_thickness * 2, d=cable_diameter);
     }
-    translate([-1.75, -40, -_epsilon])
-        cube([3.5, 4, 1.75]);
+    translate([-cable_diameter / 2, -outer_diameter / 2 - 1, -_epsilon])
+      cube([cable_diameter, shell_thickness * 2, cable_diameter / 2 + shell_thickness]);
 
     // Vents
-    for (x = [-4.5:2:4.5]) {
-        translate([x, -40, 6])
-            cube([1, 80, 5]);
-    }
+    up(vent_offset + (vent_height / 2)) xcopies(vent_width * 2, n=vent_count) cube([vent_width, outer_diameter, vent_height], center=true);
+  }
 }
 
-module internals() {
-    // Seperator
-    difference() {
-        translate([-40, -17, _epsilon])
-            cube([80, 1.5, 25]);
-
-        // USB socket hole
-        translate([-5, -17 - _epsilon, 2.95])
-            cube([10, 2 + (_epsilon * 2), 4.15]);
-
-        // Wiring cutout
-        translate([-16, -17 - _epsilon, -_epsilon])
-            cube([2, 1.5 + (_epsilon * 2), 4]);
-    }
-
-    // esp32 standoffs
-    translate([8.95, -12.4, 0]) {
-        standoff(4, 2.5);
-    }
-    translate([-8.85, -12.4, 0]) {
-        standoff(4, 2.5);
-    }
-    translate([9.7, 33.3, 0]) {
-        standoff(4, 2.2);
-    }
-    translate([-9.4, 33.3, 0]) {
-        standoff(4, 2.2);
-    }
-
-    // MCP9808 standoffs
-    translate([-10.15, -26.5, 15]) {
-        rotateX(230) {
-            if (show_boards)
-            mcp9808();
-            translate([2.55, 10.35, 3.5]) {
-                rotateX(180)
-                cylinder(d = 2.55, h = 10);
-            }
-            translate([17.75, 10.35, 3.5]) {
-                rotateX(180)
-                cylinder(d = 2.55, h = 10);
-            }
+module base() {
+  difference() {
+    cylinder(d=outer_diameter - (shell_thickness * 2) - $slop, h=shell_thickness) {
+      attach(TOP, BOTTOM) {
+        back(esp_y_pos) {
+          ycopies(17.9) right(22.95) standoff(standoff_hole_diam, standoff_height);
+          ycopies(19) left(22.75) standoff(standoff_hole_diam, standoff_height);
         }
+        back(mcp_y_pos - 4) xcopies(15.2) standoff(standoff_hole_diam, standoff_height);
+        back(seperator_pos) seperator();
+        back(mcp_y_pos - 4) right(cable_diameter / 2 - cable_snag_slop) zrot(-90) cable_snag();
+        back(mcp_y_pos - 4) left(cable_diameter / 2 - cable_snag_slop) zrot(90) cable_snag();
+      }
     }
 
-    // Wall mount tabs
-    translate([20, 0, _epsilon])
-        cube([20, 10, 1.5]);
-    translate([-40, 0, _epsilon])
-        cube([20, 10, 1.5]);
+    back(mounting_hole1_y_offset) right(mounting_hole1_x_offset) mounting_hole();
+    difference_dome();
+  }
 }
 
-difference() {
-    internals();
-    translateZ(-_epsilon)
-        internal_dome(79, 49, 40);
-}
+if (show_cover) cover();
+if (show_base) base();
 
 if (show_boards) {
-    translate([11.5, -15, 2]) {
-        rotateZ(90)
-        esp32S2Feather();
-    }
+  move([0, esp_y_pos, standoff_height + shell_thickness]) zrot(90) esp32S2Feather();
+  move([0, mcp_y_pos, standoff_height + shell_thickness]) zrot(180) mcp9808();
 }
-
-
-
-

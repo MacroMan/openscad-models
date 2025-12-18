@@ -1,0 +1,33 @@
+{
+    "parameterSets": {
+        "v2": {
+            "$fa": "3",
+            "$fs": "0.4",
+            "cable_diameter": "4.2",
+            "cable_snag_slop": "0.8",
+            "cover_rounding": "10",
+            "esp_y_pos": "4",
+            "internal_cable_holes_height": "6",
+            "internal_cable_holes_offset": "8",
+            "internal_cable_holes_width": "2",
+            "mcp_y_pos": "-20",
+            "mounting_hole1_x_offset": "0",
+            "mounting_hole1_y_offset": "21",
+            "outer_depth": "18",
+            "outer_diameter": "70",
+            "seperator_pos": "-10",
+            "shell_thickness": "1.5",
+            "show_base": "false",
+            "show_boards": "false",
+            "show_cover": "true",
+            "standoff_height": "4.5",
+            "standoff_hole_diam": "1.8",
+            "vent_count": "6",
+            "vent_height": "4",
+            "vent_offset": "8",
+            "vent_width": "2"
+        }
+    },
+    "parameterSets": "",
+    "fileFormatVersion": "1"
+}
