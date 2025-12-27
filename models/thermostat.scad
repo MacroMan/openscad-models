@@ -4,9 +4,6 @@ include <../scripts/common.scad>
 use <../modules/esp32-s2-feather.scad>
 use <../modules/mcp9808.scad>
 
-$fa = 12;
-$fs = 0.4;
-
 outer_diameter = 70;
 outer_depth = 18;
 shell_thickness = 1.5;
