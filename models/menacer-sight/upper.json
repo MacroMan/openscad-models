@@ -1,0 +1,27 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "New set 1": {
+            "back_angle": "55",
+            "back_corner_height": "34",
+            "backcut_angle": "70",
+            "body_height": "63.5",
+            "body_width": "18",
+            "fwd_angle": "65",
+            "sight_cutout_height": "19.5",
+            "sight_cutout_length": "68",
+            "sight_cutout_radius": "0.5",
+            "sight_cutout_y_offset": "18",
+            "sight_cutout_z_offset": "41.600000000000001",
+            "sight_grip_angle": "45",
+            "sight_grip_distance": "22",
+            "sight_grip_gap": "3",
+            "sight_grip_thickness": "2",
+            "sight_grip_width": "11",
+            "sight_grip_y": "20",
+            "triangle_corner_radius": "2",
+            "triangle_flare": "2",
+            "tunnel_length": "74"
+        }
+    }
+}
